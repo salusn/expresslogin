@@ -25,10 +25,11 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+app.use(validator());
 
 app.use('/', index);
 app.use('/users', users);
-app.use(validator());
+
 app.get('/register', register);
 app.get('/login', login);
 app.get('/welcome', welcome);

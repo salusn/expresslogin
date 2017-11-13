@@ -1,6 +1,11 @@
+if errors  
+  ul
+    for error in errors
+      li!= error.msg
 block content
     h1= title
     form(name="add-estimation", method="post")
+    
         div.input
             span.label Firstname
             input(type="text", name="firstname")
@@ -18,7 +23,7 @@ block content
 
             div.input
             span.label Username
-            input(type="text", name="username")
+            input(type="text", name="username" required, data-required-msg="Username is required")
 
             div.input
             span.label Password
