@@ -1,11 +1,12 @@
-if errors  
+if errors
   ul
     for error in errors
-      li!= error.msg
+        
+      li!= error.message
 block content
     h1= title
     form(name="add-estimation", method="post")
-    
+
         div.input
             span.label Firstname
             input(type="text", name="firstname")
