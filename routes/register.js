@@ -6,6 +6,7 @@ const Joi = require('joi');
 var i18n=require("i18n-express");
 var flash = require('connect-flash');
 var cookieParser = require('cookie-parser');
+const bcrypt = require('bcrypt');
 
 
 var MongoClient = require('mongodb').MongoClient;
@@ -46,28 +47,33 @@ router.post('/register', function(req, res) {
 				cpassword = req.body.cpassword;
 	 
 			MongoClient.connect(url, function(err, db) {
-			  if (err) return
-				assert.equal(null, err);
+
 			    var collection = db.collection('formaction')
-	        
-	        	collection.find({'email':email }, function(err, user) {
-
-		        if (user.length!=0) {
-		              
-		             var err = new Error();
-		            err.status = "email:"  + email +", already exists";
-					res.render('register', {messages: err.status});
-		        } else{
-
-					collection.insert({firstname: firstname, lastname: lastname, email: email, number: number, username: username, password: password}, function(err, result) {
-				    	if(result){
-				     		res.redirect('welcome')	 
-				        }
-				    })
-		          }
-	    	    })			  
+		        function validateEmailAccessibility(email){
+				   return collection.findOne({email: email}).then(function(result){
+				        return result ;
+				   });
+			    }
+				validateEmailAccessibility(email).then(function(valid) {
+					
+				    if (valid == null) {
+					    console.log("Email is valid");
+					    collection.insert({firstname: firstname, lastname: lastname, email: email, number: number, username: username, password: password}, function(err, result) {
+						    	if(result){
+						     		res.redirect('welcome')	 
+						        }
+						})
+					} else {
+						    console.log("Email already used");
+						    var err = new Error();
+				            err.status = "email:"  + email +", already exists";
+							res.render('register', {messages: err.status});
+					    }
+	            });
+	 	  
 		    })
-	  }
+
+	    }
 });
 
 

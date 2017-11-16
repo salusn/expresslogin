@@ -10,6 +10,7 @@ var flash = require('express-flash');
 var session = require('express-session');
 var cookieParser = require('cookie-parser');
 var flash = require('connect-flash');
+const bcrypt = require('bcrypt');
 
 
 var index = require('./routes/index');
@@ -48,6 +49,7 @@ app.get('/login', login);
 app.get('/welcome', welcome);
 
 app.post('/register',register);
+app.post('/login',login);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
