@@ -9,6 +9,7 @@ var i18n=require("i18n-express");
 var flash = require('express-flash');
 var session = require('express-session');
 var cookieParser = require('cookie-parser');
+var flash = require('connect-flash');
 
 
 var index = require('./routes/index');
@@ -38,7 +39,6 @@ app.use(session({
   cookie: { secure: true }
 }))
 app.use(flash());
-
 
 app.use('/', index);
 app.use('/users', users);

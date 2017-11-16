@@ -3,6 +3,9 @@ if errors
     for error in errors
         
       li!= error.message
+if messages
+  ul
+      li!= messages
 block content
     h1= title
     form(name="add-estimation", method="post")
