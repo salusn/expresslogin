@@ -21,46 +21,46 @@ router.post('/register', function(req, res) {
 
 
 
-	// var firstname = req.body.firstname;
-	// 	lastname = req.body.lastname;
-	// 	email = req.body.email;
-	// 	number = req.body.number;
-	// 	username = req.body.username;
-	// 	password = req.body.password;
-	// 	cpassword = req.body.cpassword;
+	
 
 	const schema = Joi.object().keys({
-	firstname: Joi.string().required(),		
-    lastname: Joi.string().required(),
-    email: Joi.string().email()
-    
-});
+
+		firstname: Joi.string().required(),		
+	    lastname: Joi.string().required(),
+	    email: Joi.string().email(),
+	    phonenumber: Joi.number().integer().required(),
+	    username: Joi.string().required(),
+	    password: Joi.string().min(3).max(15).required(),
+		confirmpassword: Joi.any().valid(Joi.ref('password')).required().options({ language: { any: { allowOnly: 'must match password' } } })
+	});
 
 
-	const result = Joi.validate({ firstname: req.body.firstname, lastname: req.body.lastname,email: req.body.email}, schema);
-	console.log(result.error)
-	 console.log(result.error.details)
+	const result = Joi.validate({ firstname: req.body.firstname, lastname: req.body.lastname,email: req.body.email, phonenumber: req.body.number, username: req.body.username, password: req.body.password, confirmpassword: req.body.cpassword}, schema);
 
 	if (result.error) {
-//req.flash('info', 'Your message goes here');
- //req.flash("messages", { "success" : "Sign Up Success" });
-        //res.redirect("register");
-    res.render('register', { errors: result.error.details });
-   //return i18n.transform(result.errors);
-   }
-
+    	res.render('register', { errors: result.error.details });
+    } 
+    else { 
+var firstname = req.body.firstname;
+		lastname = req.body.lastname;
+		email = req.body.email;
+		number = req.body.number;
+		username = req.body.username;
+		password = req.body.password;
+		cpassword = req.body.cpassword;
  
-	// MongoClient.connect(url, function(err, db) {
-	//   if (err) return
-	// assert.equal(null, err);
-	//   var collection = db.collection('formaction')
-	//   collection.insert({firstname: firstname, lastname: lastname, email: email, number: number, username: username, password: password}, function(err, result) {
-	//      if(result){
-	//      	res.redirect('welcome')	 
-	//      }
-	//   })
-	// })
-});
+		MongoClient.connect(url, function(err, db) {
+		  if (err) return
+		assert.equal(null, err);
+		  var collection = db.collection('formaction')
+		  collection.insert({firstname: firstname, lastname: lastname, email: email, number: number, username: username, password: password}, function(err, result) {
+		     if(result){
+		     	res.redirect('welcome')	 
+		     }
+		  })
+		})
+	}
+ });
 
 
 module.exports = router;

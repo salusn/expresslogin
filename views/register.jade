@@ -9,18 +9,18 @@ block content
 
         div.input
             span.label Firstname
-            input(type="text", name="firstname")
+            input(type="text", name="firstname" required, data-required-msg="Firstname is required")
             div.input
             span.label Lastname
-            input(type="text", name="lastname")
+            input(type="text", name="lastname" required, data-required-msg="Lastname is required")
 
             div.input
             span.label Email
-            input(type="text", name="email")
+            input(type="text", name="email" required, data-required-msg="Email is required")
 
             div.input
             span.label Phone Number
-            input(type="text", name="number")
+            input(type="text", name="number" required, data-required-msg="Phone number is required")
 
             div.input
             span.label Username
@@ -28,11 +28,11 @@ block content
 
             div.input
             span.label Password
-            input(type="password", name="password")
+            input(type="password", name="password" required, data-required-msg="Password is required")
 
             div.input
             span.label Confirm Password
-            input(type="password", name="cpassword")
+            input(type="password", name="cpassword" required, data-required-msg="Confirm Password is required")
 
         div.actions
             input(type="submit", value="Register")
