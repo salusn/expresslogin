@@ -49,6 +49,7 @@ router.post('/register', function(req, res) {
 			MongoClient.connect(url, function(err, db) {
 
 			    var collection = db.collection('formaction')
+			    let hash = bcrypt.hashSync('password', 10);
 		        function validateEmailAccessibility(email){
 				   return collection.findOne({email: email}).then(function(result){
 				        return result ;
@@ -58,7 +59,7 @@ router.post('/register', function(req, res) {
 					
 				    if (valid == null) {
 					    console.log("Email is valid");
-					    collection.insert({firstname: firstname, lastname: lastname, email: email, number: number, username: username, password: password}, function(err, result) {
+					    collection.insert({firstname: firstname, lastname: lastname, email: email, number: number, username: username, password: hash}, function(err, result) {
 						    	if(result){
 						     		res.redirect('welcome')	 
 						        }
