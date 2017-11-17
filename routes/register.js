@@ -6,8 +6,8 @@ const Joi = require('joi');
 var i18n=require("i18n-express");
 var flash = require('connect-flash');
 var cookieParser = require('cookie-parser');
-const bcrypt = require('bcrypt');
-
+var bcrypt = require('bcrypt');
+var salt = bcrypt.genSaltSync(10);
 
 var MongoClient = require('mongodb').MongoClient;
 assert = require('assert');
@@ -49,7 +49,8 @@ router.post('/register', function(req, res) {
 			MongoClient.connect(url, function(err, db) {
 
 			    var collection = db.collection('formaction')
-			    let hash = bcrypt.hashSync('password', 10);
+			    //slet hash = bcrypt.hashSync(password, 10);
+			    var hash = bcrypt.hashSync(password, salt);
 		        function validateEmailAccessibility(email){
 				   return collection.findOne({email: email}).then(function(result){
 				        return result ;
@@ -61,6 +62,7 @@ router.post('/register', function(req, res) {
 					    console.log("Email is valid");
 					    collection.insert({firstname: firstname, lastname: lastname, email: email, number: number, username: username, password: hash}, function(err, result) {
 						    	if(result){
+						    		//console.log(req.session.user);
 						     		res.redirect('welcome')	 
 						        }
 						})

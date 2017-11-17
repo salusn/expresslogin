@@ -1,12 +1,15 @@
+if messages
+  ul        
+      li!= messages
 block content
     h1= title
     form(name="add-estimation", method="post")
         div.input
-            span.label Firstname
-            input(type="text", name="firstname")
+            span.label Username
+            input(type="text", name="username")
             div.input
-            span.label Lastname
-            input(type="text", name="lastname")
+            span.label Password
+            input(type="password", name="password")
         div.actions
             input(type="submit", value="add")
 
