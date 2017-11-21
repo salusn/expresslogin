@@ -1,6 +1,6 @@
 var express = require('express');
 var router = express.Router();
-const bcrypt = require('bcrypt');
+var bcrypt = require('bcrypt');
 var MongoClient = require('mongodb').MongoClient;
 var url = 'mongodb://localhost:27017/formdb';
 var salt = bcrypt.genSaltSync(10);
@@ -13,34 +13,36 @@ router.get('/login', function(req, res, next) {
 router.post('/login', function(req, res) {
 	 
 	MongoClient.connect(url, function(err, db) {
-		var collection = db.collection('formaction')
+		var collection = db.collection('formaction');
 		var username = req.body.username;
 			password = req.body.password;
 		function validateUserlogin(){
 		return collection.findOne({username: username}).then(function(result){
 			if(result != null) {
 				 bcrypt.compare(password,result.password, function(err, doc){
-				 	console.log(res)
 				 	if(doc === true){
-				 		res.redirect('welcome')	 
-				 		console.log(res);
+				 		console.log(req);
+  						req.session.username = req.body.username;
+  						console.log(req.session);
+				 		res.redirect('welcome');	 
+				 		//console.log(res);
 				 	} else{
 				 		res.render('login', {messages: "Invalid entry"});
 				 	}
 				 	
-				 })
+				 });
 		} else{
 			res.render('login', {messages: "Invalid entry"});
 		}
 			
 		   });
-		return result
+		//return result
 		}
 
 		validateUserlogin(username).then(function(result) {
 
 
-		})	
-	})
-})
+		});	
+	});
+});
 module.exports = router;

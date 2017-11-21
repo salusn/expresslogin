@@ -1,5 +1,7 @@
+// jshint ignore: start
 extends layout
-
 block content
-  h1= title
-  
+  a(href='/logout') Logout
+  h1= username
+  if(username == null)
+    a(href='/login') Login

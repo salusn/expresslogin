@@ -1,3 +1,4 @@
+// jshint ignore: start
 var express = require('express');
 var path = require('path');
 var favicon = require('serve-favicon');
@@ -8,7 +9,6 @@ const Joi = require('joi');
 var i18n=require("i18n-express");
 var flash = require('express-flash');
 var session = require('express-session');
-var cookieParser = require('cookie-parser');
 var flash = require('connect-flash');
 const bcrypt = require('bcrypt');
 
@@ -18,6 +18,7 @@ var users = require('./routes/users');
 var login = require('./routes/login');
 var register = require('./routes/register');
 var welcome = require('./routes/welcome');
+var logout = require('./routes/logout');
 
 var app = express();
 
@@ -39,6 +40,14 @@ app.use(session({
   saveUninitialized: true,
   cookie: { secure: true }
 }))
+app.use(function(req, res, next){
+  res.locals.username = req.body.username;
+  //console.log(res.locals.username)
+
+  next();
+})
+app.get('/welcome', welcome);
+
 app.use(flash());
 
 app.use('/', index);
@@ -46,7 +55,8 @@ app.use('/users', users);
 
 app.get('/register', register);
 app.get('/login', login);
-app.get('/welcome', welcome);
+//app.get('/welcome', welcome);
+app.get('/logout', logout);
 
 app.post('/register',register);
 app.post('/login',login);
