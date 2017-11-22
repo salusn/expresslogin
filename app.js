@@ -33,6 +33,23 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, 'public')));
 
+
+
+// app.use(function(req, res, next){  
+//   res.locals.username = req.body.username;
+//   next();
+// })
+// app.get('/welcome', welcome);
+
+app.use(function(req, res, next) {
+  //console.log(req.session);
+      res.locals.username = req.body.username;
+      next(null,req,res);
+  //   });
+  // } else{
+  //   next();
+  // }
+});
 app.use(cookieParser('keyboard cat'));
 app.use(session({
   secret: 'keyboard cat',
@@ -40,14 +57,6 @@ app.use(session({
   saveUninitialized: true,
   cookie: { secure: true }
 }))
-app.use(function(req, res, next){
-  res.locals.username = req.body.username;
-  //console.log(res.locals.username)
-
-  next();
-})
-app.get('/welcome', welcome);
-
 app.use(flash());
 
 app.use('/', index);
@@ -55,7 +64,7 @@ app.use('/users', users);
 
 app.get('/register', register);
 app.get('/login', login);
-//app.get('/welcome', welcome);
+app.get('/welcome', welcome);
 app.get('/logout', logout);
 
 app.post('/register',register);

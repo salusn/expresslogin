@@ -1,3 +1,4 @@
+// jshint ignore: start
 var express = require('express');
 var router = express.Router();
 var bcrypt = require('bcrypt');
@@ -18,14 +19,13 @@ router.post('/login', function(req, res) {
 			password = req.body.password;
 		function validateUserlogin(){
 		return collection.findOne({username: username}).then(function(result){
+			res.locals.user = result.username
 			if(result != null) {
 				 bcrypt.compare(password,result.password, function(err, doc){
 				 	if(doc === true){
-				 		console.log(req);
-  						req.session.username = req.body.username;
-  						console.log(req.session);
+  						req.session.username = result.username;
+                        console.log(req.session);
 				 		res.redirect('welcome');	 
-				 		//console.log(res);
 				 	} else{
 				 		res.render('login', {messages: "Invalid entry"});
 				 	}
@@ -36,12 +36,13 @@ router.post('/login', function(req, res) {
 		}
 			
 		   });
-		//return result
+
+		return result
 		}
 
 		validateUserlogin(username).then(function(result) {
-
-
+        console.log(result)
+ 
 		});	
 	});
 });

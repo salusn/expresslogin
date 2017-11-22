@@ -2,6 +2,5 @@
 extends layout
 block content
   a(href='/logout') Logout
-  h1= username
-  if(username == null)
-    a(href='/login') Login
+  h1= "Welcome" + username
+  a(href='/login') Login
