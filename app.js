@@ -11,7 +11,8 @@ var flash = require('express-flash');
 var session = require('express-session');
 var flash = require('connect-flash');
 const bcrypt = require('bcrypt');
-
+var MongoClient = require('mongodb').MongoClient;
+var url = 'mongodb://localhost:27017/formdb';
 
 var index = require('./routes/index');
 var users = require('./routes/users');
@@ -33,31 +34,40 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, 'public')));
 
-
-
-// app.use(function(req, res, next){  
-//   res.locals.username = req.body.username;
-//   next();
-// })
-// app.get('/welcome', welcome);
+app.use(session({
+  cookieName: 'session',
+  secret: 'random_string_goes_here',
+  resave: false,
+ saveUninitialized: true,
+  duration: 30 * 60 * 1000,
+  activeDuration: 5 * 60 * 1000,
+    secure: true,
+  ephemeral: true
+}));
+app.use(flash());
 
 app.use(function(req, res, next) {
-  //console.log(req.session);
-      res.locals.username = req.body.username;
-      next(null,req,res);
-  //   });
-  // } else{
-  //   next();
-  // }
+  console.log("sessionhere")
+ 
+  if (req.session && req.session.user) {
+    MongoClient.connect(url, function(err, db) {
+    var collection = db.collection('formaction');
+     collection.findOne({ username: req.session.user.username }, function(err, user) {
+      if (user) {
+        req.user = user;
+        delete req.user.password; // delete the password from the session
+        req.session.user = user;  //refresh the session value
+        res.locals.user = user;
+      }
+      next();
+     });
+   });
+  } else {
+     next();
+  }
+
 });
-app.use(cookieParser('keyboard cat'));
-app.use(session({
-  secret: 'keyboard cat',
-  resave: false,
-  saveUninitialized: true,
-  cookie: { secure: true }
-}))
-app.use(flash());
+
 
 app.use('/', index);
 app.use('/users', users);
