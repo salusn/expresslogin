@@ -38,16 +38,15 @@ app.use(session({
   cookieName: 'session',
   secret: 'random_string_goes_here',
   resave: false,
- saveUninitialized: true,
+  saveUninitialized: true,
   duration: 30 * 60 * 1000,
   activeDuration: 5 * 60 * 1000,
-    secure: true,
+  secure: true,
   ephemeral: true
 }));
 app.use(flash());
 
 app.use(function(req, res, next) {
-  console.log("sessionhere")
  
   if (req.session && req.session.user) {
     MongoClient.connect(url, function(err, db) {

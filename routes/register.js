@@ -1,3 +1,4 @@
+// jshint ignore: start
 var express = require('express');
 var router = express.Router();
 var session = require('express-session')
@@ -31,7 +32,6 @@ router.post('/register', function(req, res) {
 		confirmpassword: Joi.any().valid(Joi.ref('password')).required().options({ language: { any: { allowOnly: 'must match password' } } })
 	});
 
-
 	const result = Joi.validate({ firstname: req.body.firstname, lastname: req.body.lastname,email: req.body.email, phonenumber: req.body.number, username: req.body.username, password: req.body.password, confirmpassword: req.body.cpassword}, schema);
 
 	if (result.error) {
@@ -49,7 +49,6 @@ router.post('/register', function(req, res) {
 			MongoClient.connect(url, function(err, db) {
 
 			    var collection = db.collection('formaction')
-			    //slet hash = bcrypt.hashSync(password, 10);
 			    var hash = bcrypt.hashSync(password, salt);
 		        function validateEmailAccessibility(email){
 				   return collection.findOne({email: email}).then(function(result){
@@ -59,15 +58,15 @@ router.post('/register', function(req, res) {
 				validateEmailAccessibility(email).then(function(valid) {
 					
 				    if (valid == null) {
-					    console.log("Email is valid");
 					    collection.insert({firstname: firstname, lastname: lastname, email: email, number: number, username: username, password: hash}, function(err, result) {
 						    	if(result){
-						    		//console.log(req.session.user);
-						     		res.redirect('welcome')	 
+						    		result.ops.forEach(function(user, index, arr) {						    			
+									req.session.user = user;
+						    		})
+						     	 	res.redirect('welcome')	 
 						        }
 						})
 					} else {
-						    console.log("Email already used");
 						    var err = new Error();
 				            err.status = "email:"  + email +", already exists";
 							res.render('register', {messages: err.status});

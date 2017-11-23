@@ -20,13 +20,14 @@ router.post('/login', function(req, res) {
 			var hash = bcrypt.hashSync(password, salt);
 
 		collection.findOne({username: username}, function(err, user) {
-
+			
 			if(!user){
 				res.render('login', {messages: "Invalid username or password"});
 			} else{
 				bcrypt.compare(password,user.password, function(err, result){
 					if(result == true) {
 						req.session.user = user;
+						console.log(user)
 						res.redirect('welcome');	 
 
 					} else{
