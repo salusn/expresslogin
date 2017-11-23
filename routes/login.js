@@ -27,7 +27,6 @@ router.post('/login', function(req, res) {
 				bcrypt.compare(password,user.password, function(err, result){
 					if(result == true) {
 						req.session.user = user;
-						console.log(user)
 						res.redirect('welcome');	 
 
 					} else{
