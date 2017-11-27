@@ -3,7 +3,7 @@ var express = require('express');
 var router = express.Router();
 
 router.get('/welcome',requireLogin, function(req, res, next) {
-	res.render('welcome', {username: req.session.user.username});
+	res.render('welcome', {user: req.session.user});
 });
 
 function requireLogin (req, res, next) {
