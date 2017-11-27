@@ -1,0 +1,19 @@
+// jshint ignore: start
+block content
+    h1= "Edit Data"
+    form(name="edit", method="post")
+        div.input
+        each dat in data
+            span.label Firstname
+            input(type="text", name="firstname", value="#{dat.firstname}")
+            div.input
+            span.label Lastname
+            input(type="text", name="lastname", value="#{dat.lastname}")
+            div.input
+            span.label Email
+            input(type="text", name="email", value="#{dat.email}")
+            div.input
+            span.label Phone
+            input(type="text", name="number", value="#{dat.number}")
+        div.actions
+            input(type="submit", value="edit")
